@@ -80,3 +80,6 @@ logs/
 *.bak
 *.swp
 *~
+
+text
+structure
