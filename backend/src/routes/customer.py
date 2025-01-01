@@ -9,10 +9,10 @@ from ..schemas.customer import (
     CustomerCreate,
     CustomerUpdate,
     CustomerResponse,
-    BookingResponse,
     ReviewCreate,
     ReviewResponse
 )
+from ..schemas.booking import BookingResponse
 from ..models.customer import BookingStatus
 
 router = APIRouter()

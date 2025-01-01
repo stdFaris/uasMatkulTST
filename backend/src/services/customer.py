@@ -2,7 +2,8 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from typing import List, Optional
-from ..models.customer import Customer, Review, Booking, BookingStatus
+from ..models.customer import Customer, BookingStatus
+from ..models.booking import Review, Booking
 from ..utils.auth import get_password_hash
 
 class CustomerService:

@@ -3,8 +3,19 @@ import re
 from typing import Optional
 from datetime import datetime, time
 from fastapi import HTTPException, status
+from ..models.partner import Gender
 
 class Validators:
+    @staticmethod
+    def validate_gender(gender: str) -> bool:
+        """Validate gender value."""
+        if gender not in [g.value for g in Gender]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid gender. Must be one of: {', '.join([g.value for g in Gender])}"
+            )
+        return True
+    
     @staticmethod
     def validate_phone_number(phone: str) -> bool:
         """Validate phone number format."""

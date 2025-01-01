@@ -1,6 +1,7 @@
 # src/config/settings.py
-from pydantic import BaseSettings, PostgresDsn, SecretStr
-from typing import Optional
+from pydantic import PostgresDsn, SecretStr, EmailStr
+from pydantic_settings import BaseSettings
+from typing import Optional, Any
 
 class Settings(BaseSettings):
     # Database settings
@@ -25,6 +26,15 @@ class Settings(BaseSettings):
     APP_NAME: str = "SantaiRumah"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
+
+    # Email settings
+    RESEND_API_KEY: str
+    FROM_EMAIL: EmailStr = "jokodok678@gmail.com"
+    
+    # Scheduler settings
+    ENABLE_SCHEDULER: bool = True
+    SCHEDULER_API_ENABLED: bool = True
+    SCHEDULER_TIMEZONE: str = "Asia/Jakarta"
 
     class Config:
         env_file = ".env"

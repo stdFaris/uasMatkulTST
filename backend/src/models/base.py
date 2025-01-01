@@ -1,3 +1,4 @@
+# src/models/base.py
 from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.ext.declarative import declared_attr
 from datetime import datetime

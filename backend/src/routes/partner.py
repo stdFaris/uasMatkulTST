@@ -12,10 +12,11 @@ from ..schemas.partner import (
     ServiceAreaCreate,
     ServiceAreaResponse,
     ScheduleCreate,
-    ScheduleResponse,
-    BookingResponse
+    ScheduleResponse
 )
+from ..schemas.booking import BookingResponse
 from ..models.customer import BookingStatus, UserRole
+from ..models.partner import Gender
 
 router = APIRouter()
 
@@ -84,3 +85,8 @@ async def get_partner_bookings(
         )
     partner_service = PartnerService(db)
     return partner_service.get_partner_bookings(current_user.id, status, skip, limit)
+
+@router.get("/genders", response_model=List[str])
+async def get_available_genders():
+    """Get list of valid gender options."""
+    return [gender.value for gender in Gender]

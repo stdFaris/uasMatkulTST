@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from typing import List, Optional
 from ..models.partner import Partner, ServiceArea, PartnerSchedule
-from ..models.customer import Booking, BookingStatus
+from ..models.customer import BookingStatus
+from ..models.booking import Booking
 from ..utils.auth import get_password_hash
 
 class PartnerService:
@@ -21,6 +22,13 @@ class PartnerService:
         # Hash password
         partner_data["hashed_password"] = get_password_hash(partner_data.pop("password"))
         
+        # Validate gender
+        if "gender" not in partner_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Gender is required"
+            )
+        
         # Create partner
         partner = Partner(**partner_data)
         self.db.add(partner)
@@ -28,6 +36,7 @@ class PartnerService:
         self.db.refresh(partner)
         
         return partner
+
     
     def update_partner(self, partner_id: int, partner_data: dict) -> Partner:
         partner = self.db.query(Partner).get(partner_id)
