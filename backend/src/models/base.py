@@ -1,18 +1,18 @@
 # src/models/base.py
-from sqlalchemy import Column, DateTime, Integer
-from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import MetaData, DateTime, func
 from datetime import datetime
-from ..config.database import Base
 
-class TimeStampedModel:
-    @declared_attr
-    def created_at(cls):
-        return Column(DateTime, default=datetime.utcnow, nullable=False)
-    
-    @declared_attr
-    def updated_at(cls):
-        return Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+class Base(DeclarativeBase):
+    pass
 
-class BaseModel(Base):
-    __abstract__ = True
-    id = Column(Integer, primary_key=True, index=True)
+class TimestampModel:
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), 
+        server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), 
+        server_default=func.now(),
+        server_onupdate=func.now()
+    )

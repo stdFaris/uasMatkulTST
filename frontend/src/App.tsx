@@ -1,48 +1,58 @@
-// src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { ProtectedRoute } from '@/components/auth/protected-route'
+import { MainLayout } from './components/layout/main-layout'
+import LoginPage from './pages/login'
+import RegisterPage from './pages/register'
+import DashboardPage from './pages/dashboard'
+import { PartnersPage } from './pages/partners'
+import { useAuthStore } from '@/hooks/useAuth'
+import { getAccessToken } from '@/lib/utils'
+import PartnerDetailsPage from './pages/partnerDetails'
 
-// Layouts
-import DashboardLayout from './components/customer/layout/DashboardLayout'
+export default function App() {
+  const { setIsAuthenticated, isAuthenticated, fetchUser } = useAuthStore()
 
-// Pages
-import { LoginPage } from './pages/auth/LoginPage'
-import { RegisterPage } from './pages/auth/RegisterPage'
-import Dashboard from './pages/customer/dashboard'
+  // Effect untuk cek token
+  useEffect(() => {
+    const token = getAccessToken()
+    setIsAuthenticated(!!token)
+  }, [setIsAuthenticated])
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  },
-})
+  useEffect(() => {
+    const loadUser = async () => {
+      if (isAuthenticated) {
+        try {
+          await fetchUser()
+        } catch (error) {
+          console.error('Failed to fetch user:', error)
+        }
+      }
+    }
 
-function App() {
+    loadUser()
+  }, [isAuthenticated, fetchUser])
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-          {/* Customer Dashboard Routes */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="bookings" element={<div>Bookings Page</div>} />
-            <Route path="history" element={<div>History Page</div>} />
-            <Route path="messages" element={<div>Messages Page</div>} />
-            <Route path="settings" element={<div>Settings Page</div>} />
+        {/* Protected Routes */}
+        <Route element={<MainLayout />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/partners" element={<PartnersPage />} />
+            <Route path="/partners/:id" element={<PartnerDetailsPage />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Route>
+        </Route>
 
-          {/* Redirect root to login */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+        {/* Catch all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App

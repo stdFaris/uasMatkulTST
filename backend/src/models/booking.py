@@ -1,38 +1,30 @@
 # src/models/booking.py
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, Text, DateTime, Enum, Boolean
-from sqlalchemy.orm import relationship
 from datetime import datetime
-from .base import BaseModel, TimeStampedModel
-from .customer import BookingStatus, BookingType
+from typing import Optional, List
+from sqlalchemy import ForeignKey, Enum, Float, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from .base import Base, TimestampModel
+from src.schemas.booking import BookingType, BookingStatus
 
-class Booking(BaseModel, TimeStampedModel):
+class Booking(Base, TimestampModel):
     __tablename__ = "bookings"
-    
-    customer_id = Column(Integer, ForeignKey("customers.id", ondelete="CASCADE"), nullable=False)
-    partner_id = Column(Integer, ForeignKey("partners.id", ondelete="CASCADE"), nullable=False)
-    booking_type = Column(Enum(BookingType), nullable=False, index=True)
-    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING, index=True)
-    start_datetime = Column(DateTime, nullable=False, index=True)
-    end_datetime = Column(DateTime, nullable=False)
-    duration_hours = Column(Integer)
-    total_price = Column(Float, nullable=False)
-    notes = Column(Text)
-    
-    # Updated relationships
-    customer = relationship("Customer", back_populates="bookings")
-    partner = relationship("Partner", back_populates="bookings")
-    review = relationship("Review", back_populates="booking", uselist=False, cascade="all, delete-orphan")
 
-class Review(BaseModel, TimeStampedModel):
-    __tablename__ = "reviews"
-    
-    booking_id = Column(Integer, ForeignKey("bookings.id"), unique=True)
-    customer_id = Column(Integer, ForeignKey("customers.id"))
-    partner_id = Column(Integer, ForeignKey("partners.id"))
-    rating = Column(Integer, nullable=False)
-    comment = Column(Text)
-    
-    # Relationships
-    booking = relationship("Booking", back_populates="review")
-    customer = relationship("Customer", back_populates="reviews")
-    partner = relationship("Partner", back_populates="reviews")
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    cancellation_reason: Mapped[Optional[str]] = mapped_column(nullable=True)
+    customer_notes: Mapped[Optional[str]] = mapped_column(nullable=True)
+    partner_notes: Mapped[Optional[str]] = mapped_column(nullable=True)
+    is_rescheduled: Mapped[bool] = mapped_column(default=False)
+    original_booking_id: Mapped[Optional[int]] = mapped_column(nullable=True)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id"))
+    partner_id: Mapped[int] = mapped_column(ForeignKey("partners.id"))
+    type: Mapped[BookingType] = mapped_column(Enum(BookingType))
+    start_datetime: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    end_datetime: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    status: Mapped[BookingStatus] = mapped_column(Enum(BookingStatus), default=BookingStatus.PENDING)
+    total_price: Mapped[float] = mapped_column(Float)
+    notes: Mapped[Optional[str]] = mapped_column(nullable=True)
+
+    customer: Mapped["Customer"] = relationship(back_populates="bookings")
+    partner: Mapped["Partner"] = relationship(back_populates="bookings")
+    notifications: Mapped[List["Notification"]] = relationship(back_populates="booking")
+    review: Mapped[Optional["Review"]] = relationship("Review", back_populates="booking", uselist=False)

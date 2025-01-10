@@ -1,18 +1,25 @@
 // src/types/auth.ts
-export interface LoginFormData {
+export interface UserAuth {
   email: string
   password: string
 }
 
-export interface RegisterFormData {
+export interface Token {
+  access_token: string
+  refresh_token: string
+}
+
+export interface CustomerCreate {
   email: string
   password: string
   full_name: string
   phone: string
-  submit?: string
+  kecamatan: string
 }
 
-export interface AuthResponse {
-  access_token: string
-  token_type: string
+export interface User {
+  id: string
+  email: string
+  name: string
+  kecamatan: string
 }

@@ -1,45 +1,50 @@
 # src/routes/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import timedelta
-from ..config.database import get_db
-from ..config.settings import Settings
-from ..schemas.auth import Token, LoginRequest
-from ..services.auth import verify_password, create_access_token
-from ..models.customer import Customer
-from ..models.partner import Partner
+from typing import Optional
+from src.schemas.auth import UserAuth, Token, RefreshToken
+from src.schemas.customer import CustomerBase
+from src.services.auth_service import AuthService
+from src.database.session import get_db
+from src.utils.deps import get_current_customer
+from src.models.customer import Customer
 
-settings = Settings()
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-@router.post("/token", response_model=Token)
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+@router.post("/login", response_model=Token)
+async def login(
+    auth_data: UserAuth,
     db: Session = Depends(get_db)
 ):
-    # Try to find user in both customer and partner tables
-    user = db.query(Customer).filter(Customer.email == form_data.username).first()
-    is_partner = False
-    
-    if not user:
-        user = db.query(Partner).filter(Partner.email == form_data.username).first()
-        is_partner = True
-    
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    """Login endpoint for customers"""
+    customer = await AuthService.authenticate_customer(db, auth_data.email, auth_data.password)
+    if not customer:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Incorrect email or password"
         )
-    
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={
-            "sub": user.email,
-            "role": "partner" if is_partner else "customer"
-        },
-        expires_delta=access_token_expires
-    )
-    
-    return {"access_token": access_token, "token_type": "bearer"}
+    return await AuthService.create_tokens(customer)
+
+@router.post("/refresh", response_model=Token)
+async def refresh_token(
+    refresh_token: RefreshToken,
+    db: Session = Depends(get_db)
+):
+    """Refresh access token"""
+    try:
+        return await AuthService.refresh_token(db, refresh_token.refresh_token)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e)
+        )
+
+@router.get("/me", response_model=CustomerBase)
+async def get_current_user_info(
+    current_customer: Customer = Depends(get_current_customer),
+    db: Session = Depends(get_db)
+):
+    """
+    Get current authenticated user's information
+    """
+    return current_customer

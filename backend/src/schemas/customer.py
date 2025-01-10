@@ -1,47 +1,34 @@
 # src/schemas/customer.py
-from pydantic import BaseModel, EmailStr, constr, Field
-from typing import Optional
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional, List, Annotated
 from datetime import datetime
-from ..models.customer import UserRole, BookingStatus
+from .partner import PartnerRole
+from .booking import BookingType
 
 class CustomerBase(BaseModel):
     email: EmailStr
-    full_name: str
-    phone: str = Field(pattern=r'^\+?[1-9]\d{1,14}$')
+    full_name: Annotated[str, Field(min_length=3, max_length=50)]
+    phone: Annotated[str, Field(pattern=r'^\+?[1-9][0-9]{7,14}$')]
+    kecamatan: str
 
 class CustomerCreate(CustomerBase):
-    password: str
+    password: Annotated[str, Field(min_length=8)]
+
+class CustomerPreferences(BaseModel):
+    preferred_partner_roles: List[PartnerRole] = [PartnerRole.PEMBANTU, PartnerRole.TUKANG_KEBUN, PartnerRole.TUKANG_PIJAT]
+    preferred_booking_type: Optional[BookingType] = None
+    min_rating: Optional[float] = None
+    max_price_per_hour: Optional[float] = None
+    preferred_languages: Optional[List[str]] = None
 
 class CustomerUpdate(BaseModel):
-    full_name: Optional[str] = None
-    phone: Optional[str] = Field(None, pattern=r'^\+?[1-9]\d{1,14}$')
-    password: Optional[str] = None
-    profile_image: Optional[str] = None
-    is_active: Optional[bool] = None
+    full_name: Optional[str]
+    phone: Optional[str]
+    kecamatan: Optional[str]
+    preferences: Optional[CustomerPreferences]
 
 class CustomerResponse(CustomerBase):
     id: int
-    is_active: bool
-    role: UserRole
-    profile_image: Optional[str]
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
-
-class ReviewBase(BaseModel):
-    rating: int
-    comment: Optional[str] = None
-
-class ReviewCreate(ReviewBase):
-    pass
-
-class ReviewResponse(ReviewBase):
-    id: int
-    booking_id: int
-    customer_id: int
-    partner_id: int
     created_at: datetime
 
     class Config:
