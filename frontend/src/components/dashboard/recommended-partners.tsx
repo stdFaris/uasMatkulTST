@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,6 +28,7 @@ export function RecommendedPartners({
   partners,
   onRefresh,
 }: RecommendedPartnersProps) {
+  const navigate = useNavigate()
   const [selectedRoles, setSelectedRoles] = useState<PartnerRole[]>([])
 
   const handleRoleToggle = (role: PartnerRole) => {
@@ -37,6 +39,10 @@ export function RecommendedPartners({
       onRefresh(newRoles.length > 0 ? newRoles : undefined)
       return newRoles
     })
+  }
+
+  const handlePartnerClick = (partnerId: string | number) => {
+    navigate(`/partners/${partnerId.toString()}`)
   }
 
   return (
@@ -100,7 +106,15 @@ export function RecommendedPartners({
             partners.map((partner) => (
               <div
                 key={partner.id}
-                className="p-3 sm:p-4 rounded-lg bg-secondary/10 space-y-2 sm:space-y-3 hover:bg-secondary/20 transition-colors"
+                onClick={() => handlePartnerClick(partner.id)}
+                className="p-3 sm:p-4 rounded-lg bg-secondary/10 space-y-2 sm:space-y-3 hover:bg-secondary/20 transition-colors cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handlePartnerClick(partner.id)
+                  }
+                }}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-0">
                   <div>

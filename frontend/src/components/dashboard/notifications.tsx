@@ -1,4 +1,4 @@
-// src/components/dashboard/notifications
+// src/components/dashboard/notifications.tsx
 import { Notification, NotificationType } from '@/types/notification'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDateTime } from '@/lib/utils'
@@ -30,45 +30,45 @@ export function Notifications({
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-medium">
+    <Card className="bg-white shadow-soft hover:shadow-lg transition-shadow duration-200">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-primary-100 pb-4">
+        <CardTitle className="text-lg font-semibold text-primary-900">
           Recent Notifications
         </CardTitle>
         <Button
           variant="ghost"
           size="sm"
           onClick={onRefresh}
-          className="hover:bg-gray-100"
+          className="hover:bg-primary-50"
         >
           <RefreshCw className="h-4 w-4 mr-1" />
           Refresh
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Bell className="h-12 w-12 text-gray-300 mb-3" />
-            <p className="text-gray-500 font-medium">No new notifications</p>
-            <p className="text-sm text-gray-400">
+            <Bell className="h-12 w-12 text-primary-200 mb-3" />
+            <p className="text-primary-700 font-medium">No new notifications</p>
+            <p className="text-sm text-primary-500">
               When you receive notifications, they will appear here
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-start space-x-4 p-3 rounded-lg hover:bg-primary-50 transition-colors"
               >
                 <div className="flex-shrink-0">
                   {getNotificationIcon(notification.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900">
+                  <p className="text-sm text-primary-900 font-medium">
                     {notification.message}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-primary-500 mt-1">
                     {formatDateTime(notification.created_at)}
                   </p>
                 </div>

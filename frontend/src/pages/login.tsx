@@ -16,7 +16,7 @@ export default function LoginPage() {
   }, [isAuthenticated, navigate])
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-primary-50 to-white">
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
           <LoginForm />

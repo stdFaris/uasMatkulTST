@@ -13,7 +13,6 @@ export function Header() {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Partners', href: '/partners' },
-    { name: 'Bookings', href: '/bookings' },
   ]
 
   const isActive = (path: string) => location.pathname === path
@@ -50,8 +49,12 @@ export function Header() {
           </div>
 
           {/* Desktop Logout */}
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <Button variant="ghost" onClick={logout}>
+          <div className="hidden sm:ml-6 sm:flex sm:items-center ">
+            <Button
+              variant="ghost"
+              onClick={logout}
+              className="hover:bg-error-500 hover:text-white"
+            >
               Logout
             </Button>
           </div>

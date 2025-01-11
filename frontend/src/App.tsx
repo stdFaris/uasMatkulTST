@@ -8,7 +8,7 @@ import DashboardPage from './pages/dashboard'
 import { PartnersPage } from './pages/partners'
 import { useAuthStore } from '@/hooks/useAuth'
 import { getAccessToken } from '@/lib/utils'
-import PartnerDetailsPage from './pages/partnerDetails'
+import PartnerDetailsPage from './pages/partnerDetailsPage'
 
 export default function App() {
   const { setIsAuthenticated, isAuthenticated, fetchUser } = useAuthStore()

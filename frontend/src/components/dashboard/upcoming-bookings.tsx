@@ -15,39 +15,46 @@ export function UpcomingBookings({
   onRefresh,
 }: UpcomingBookingsProps) {
   return (
-    <Card className="col-span-full xl:col-span-2">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Upcoming Bookings</CardTitle>
-        <Button onClick={onRefresh} variant="ghost" size="sm">
+    <Card className="col-span-full xl:col-span-2 bg-white shadow-soft hover:shadow-lg transition-shadow duration-200">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-primary-100 pb-4">
+        <CardTitle className="text-lg font-semibold text-primary-900">
+          Upcoming Bookings
+        </CardTitle>
+        <Button
+          onClick={onRefresh}
+          variant="ghost"
+          size="sm"
+          className="hover:bg-primary-50"
+        >
           <RefreshCw className="w-4 h-4" />
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         <div className="space-y-4">
           {bookings.length === 0 ? (
-            <p className="text-center text-muted-foreground py-4">
+            <p className="text-center text-primary-600 py-8">
               No upcoming bookings
             </p>
           ) : (
             bookings.map((booking) => (
               <div
                 key={booking.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-secondary-50"
+                className="flex items-center justify-between p-4 rounded-lg bg-primary-50/50 hover:bg-primary-50 transition-colors"
               >
-                <div>
-                  <p className="font-medium">{booking.partner.full_name}</p>
-                  <p className="text-sm text-muted-foreground">
+                <div className="space-y-1">
+                  <p className="font-semibold text-primary-900">
+                    {booking.partner.full_name}
+                  </p>
+                  <p className="text-sm text-primary-600">
                     {formatDateTime(booking.start_datetime)}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {booking.type}
-                  </p>
+                  <p className="text-sm text-primary-600">{booking.type}</p>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">
+                <div className="text-right space-y-1">
+                  <p className="font-semibold text-primary-900">
                     {formatPrice(booking.total_price)}
                   </p>
-                  <p className="text-sm text-muted-foreground capitalize">
+                  <p className="text-sm text-primary-600 capitalize">
                     {booking.status.toLowerCase()}
                   </p>
                 </div>

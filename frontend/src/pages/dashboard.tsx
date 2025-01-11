@@ -24,17 +24,21 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-primary-50 to-white">
+        <div className="text-lg font-medium text-primary-700">Loading...</div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-        <div className="text-lg text-error-500">{error}</div>
-        <Button onClick={refresh} variant="outline">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-primary-50 to-white space-y-4">
+        <div className="text-lg text-error-600 font-medium">{error}</div>
+        <Button
+          onClick={refresh}
+          variant="outline"
+          className="hover:bg-primary-50"
+        >
           <RefreshCw className="w-4 h-4 mr-2" />
           Try Again
         </Button>
@@ -47,53 +51,60 @@ export default function DashboardPage() {
   const { stats, upcoming_bookings, recommended_partners, customer } = data
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome back, {customer.full_name}
-          </p>
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-primary-900">Dashboard</h1>
+            <p className="text-primary-600">
+              Welcome back, {customer.full_name}
+            </p>
+          </div>
+          <Button
+            onClick={refresh}
+            variant="outline"
+            size="sm"
+            className="hover:bg-primary-50"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
         </div>
-        <Button onClick={refresh} variant="outline" size="sm">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StatsCard
-          title="Total Bookings"
-          value={stats.total_bookings}
-          icon={<Calendar className="h-4 w-4 text-muted-foreground" />}
-        />
-        <StatsCard
-          title="Active Bookings"
-          value={stats.active_bookings}
-          icon={<Clock className="h-4 w-4 text-muted-foreground" />}
-        />
-        <StatsCard
-          title="Total Amount Spent"
-          value={formatPrice(stats.total_spent)}
-          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
-        />
-        <StatsCard
-          title="Completed Services"
-          value={stats.completed_bookings}
-          icon={<Users className="h-4 w-4 text-muted-foreground" />}
-        />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <StatsCard
+            title="Total Bookings"
+            value={stats.total_bookings}
+            icon={<Calendar className="h-5 w-5 text-primary-600" />}
+          />
+          <StatsCard
+            title="Active Bookings"
+            value={stats.active_bookings}
+            icon={<Clock className="h-5 w-5 text-primary-600" />}
+          />
+          <StatsCard
+            title="Total Amount Spent"
+            value={formatPrice(stats.total_spent)}
+            icon={<DollarSign className="h-5 w-5 text-primary-600" />}
+          />
+          <StatsCard
+            title="Completed Services"
+            value={stats.completed_bookings}
+            icon={<Users className="h-5 w-5 text-primary-600" />}
+          />
+        </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <UpcomingBookings bookings={upcoming_bookings} onRefresh={refresh} />
-        <RecommendedPartners
-          partners={recommended_partners}
-          onRefresh={refresh}
-        />
-        <Notifications
-          notifications={data.recent_notifications}
-          onRefresh={refresh}
-        />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <UpcomingBookings bookings={upcoming_bookings} onRefresh={refresh} />
+          <RecommendedPartners
+            partners={recommended_partners}
+            onRefresh={refresh}
+          />
+          <Notifications
+            notifications={data.recent_notifications}
+            onRefresh={refresh}
+          />
+        </div>
       </div>
     </div>
   )
