@@ -1,12 +1,10 @@
 // src/components/auth/login-form.tsx
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Form,
@@ -25,7 +23,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const { login, error, isLoading } = useAuth()
-  const [showPassword, setShowPassword] = useState(false)
+  const showPassword = false
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

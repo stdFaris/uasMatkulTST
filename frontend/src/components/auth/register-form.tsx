@@ -1,5 +1,4 @@
 // src/components/auth/register-form.tsx
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -47,7 +46,7 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const { register, error, isLoading } = useAuth()
-  const [showPassword, setShowPassword] = useState(false)
+  const showPassword = false
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
