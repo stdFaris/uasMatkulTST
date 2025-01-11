@@ -104,7 +104,8 @@ class CustomerService:
             preferences.get('preferred_partner_roles') or \
             [PartnerRole.PEMBANTU, PartnerRole.TUKANG_KEBUN, PartnerRole.TUKANG_PIJAT]
         
-        partners_per_role = max(2, ceil(5 / len(selected_roles)))
+        # Calculate partners per role (total 5 partners divided by number of roles)
+        partners_per_role = max(1, ceil(5 / len(selected_roles)))
         
         # Create match requests and get recommended partners for each selected role
         all_recommended_partners = []
@@ -155,10 +156,9 @@ class CustomerService:
                 new_partners = [p for p in additional_partners if p.id not in existing_ids]
                 all_recommended_partners.extend(new_partners[:additional_per_role])
         
-        
-        # Sort combined results by rating
+        # Sort combined results by rating and limit to 5
         all_recommended_partners.sort(key=lambda x: x.rating, reverse=True)
-        recommended_partners = all_recommended_partners[:6]
+        recommended_partners = all_recommended_partners[:5]
         
         # Get recent notifications
         recent_notifications = db.query(Notification).filter(

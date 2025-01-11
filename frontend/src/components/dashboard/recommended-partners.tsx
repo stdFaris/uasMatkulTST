@@ -41,7 +41,11 @@ export function RecommendedPartners({
     })
   }
 
-  const handlePartnerClick = (partnerId: string | number) => {
+  const handlePartnerClick = (
+    partnerId: string | number,
+    isAvailable: boolean
+  ) => {
+    if (!isAvailable) return
     navigate(`/partners/${partnerId.toString()}`)
   }
 
@@ -106,13 +110,22 @@ export function RecommendedPartners({
             partners.map((partner) => (
               <div
                 key={partner.id}
-                onClick={() => handlePartnerClick(partner.id)}
-                className="p-3 sm:p-4 rounded-lg bg-secondary/10 space-y-2 sm:space-y-3 hover:bg-secondary/20 transition-colors cursor-pointer"
+                onClick={() =>
+                  handlePartnerClick(partner.id, partner.is_available)
+                }
+                className={`p-3 sm:p-4 rounded-lg space-y-2 sm:space-y-3 transition-colors ${
+                  partner.is_available
+                    ? 'bg-secondary/10 hover:bg-secondary/20 cursor-pointer'
+                    : 'bg-gray-100 cursor-not-allowed opacity-60'
+                }`}
                 role="button"
-                tabIndex={0}
+                tabIndex={partner.is_available ? 0 : -1}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handlePartnerClick(partner.id)
+                  if (
+                    (e.key === 'Enter' || e.key === ' ') &&
+                    partner.is_available
+                  ) {
+                    handlePartnerClick(partner.id, partner.is_available)
                   }
                 }}
               >
@@ -121,12 +134,22 @@ export function RecommendedPartners({
                     <h3 className="font-semibold text-sm sm:text-base">
                       {partner.full_name}
                     </h3>
-                    <Badge
-                      variant="secondary"
-                      className={`mt-1 text-xs ${roleColors[partner.role]}`}
-                    >
-                      {roleLabels[partner.role]}
-                    </Badge>
+                    <div className="flex gap-2 mt-1">
+                      <Badge
+                        variant="secondary"
+                        className={`text-xs ${roleColors[partner.role]}`}
+                      >
+                        {roleLabels[partner.role]}
+                      </Badge>
+                      {!partner.is_available && (
+                        <Badge
+                          variant="secondary"
+                          className="bg-gray-200 text-gray-700 text-xs"
+                        >
+                          Currently Unavailable
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <div className="text-left sm:text-right">
                     <p className="font-semibold text-sm sm:text-base">
