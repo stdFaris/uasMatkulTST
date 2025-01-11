@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routes import auth, customers, partners, bookings, reviews, notifications
+import os
+import uvicorn
+
 
 app = FastAPI()
 
@@ -9,7 +12,7 @@ origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
-    "http://127.0.0.1:5174"
+    "http://127.0.0.1:5174",
 ]
 
 app.add_middleware(
@@ -32,6 +35,8 @@ app.include_router(notifications.router)
 async def root():
     return {"message": "Welcome to Service Booking API"}
 
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+

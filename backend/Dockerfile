@@ -1,9 +1,8 @@
-# Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install system dependencies including netcat
+# Install system dependencies including netcat-openbsd
 RUN apt-get update && apt-get install -y \
     postgresql-client \
     netcat-openbsd \
@@ -16,9 +15,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY . .
 
-# Remove local venv if it exists
-RUN rm -rf venv/
+# Make the script executable
+RUN chmod +x scripts/seed_database.py
 
-# Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
+# Default command yang akan di-override oleh docker-compose
+CMD uvicorn main:app --host 0.0.0.0 --port 8000
