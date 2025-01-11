@@ -18,10 +18,10 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,      # Daftar origin yang diizinkan
-    allow_credentials=True,     # Mengizinkan credentials
-    allow_methods=["*"],        # Mengizinkan semua method HTTP
-    allow_headers=["*"],        # Mengizinkan semua headers
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
