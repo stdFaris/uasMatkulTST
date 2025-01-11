@@ -1,3 +1,4 @@
+# Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
@@ -18,5 +19,5 @@ COPY . .
 # Make the script executable
 RUN chmod +x scripts/seed_database.py
 
-# Production command
+# Production command - Railway will override this with startCommand from railway.toml
 CMD uvicorn main:app --host 0.0.0.0 --port $PORT

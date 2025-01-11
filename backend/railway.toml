@@ -1,9 +1,10 @@
+# railway.toml
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
+startCommand = "sh -c 'python scripts/seed_database.py && uvicorn main:app --host 0.0.0.0 --port $PORT'"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
