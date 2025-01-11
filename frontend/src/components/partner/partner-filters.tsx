@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { UserRound, Timer, DollarSign, Star } from 'lucide-react'
+import { UserRound, Timer, Star } from 'lucide-react'
 
 interface PartnerFiltersProps {
   filters: PartnerFilter
@@ -74,7 +74,7 @@ export function PartnerFilters({
                   Tukang Pijat
                   <Badge
                     variant="secondary"
-                    className="bg-secondary-100 text-secondary-700"
+                    className="bg-secondary-100 text-success-700"
                   >
                     Massage
                   </Badge>
@@ -125,26 +125,6 @@ export function PartnerFilters({
             }
             className="bg-white border-secondary-200"
             placeholder="Enter years of experience"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-secondary-700">
-            <DollarSign className="h-4 w-4" />
-            <label className="text-sm font-medium">Maximum Hourly Rate</label>
-          </div>
-          <Input
-            type="number"
-            min="0"
-            value={filters.max_hourly_rate || ''}
-            onChange={(e) =>
-              handleChange(
-                'max_hourly_rate',
-                e.target.value ? Number(e.target.value) : undefined
-              )
-            }
-            className="bg-white border-secondary-200"
-            placeholder="Enter maximum rate"
           />
         </div>
       </CardContent>
