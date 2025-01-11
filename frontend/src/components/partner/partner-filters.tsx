@@ -74,7 +74,7 @@ export function PartnerFilters({
                   Tukang Pijat
                   <Badge
                     variant="secondary"
-                    className="bg-secondary-100 text-success-700"
+                    className="bg-success-100 text-success-700"
                   >
                     Massage
                   </Badge>

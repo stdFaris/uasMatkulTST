@@ -15,6 +15,8 @@ import { Loader2 } from 'lucide-react'
 import { BookingType } from '@/types/partner'
 import { Partner } from '@/types/partner'
 import { BookingCreate } from '@/types/booking'
+import { BookingConflictAlert } from './popupConfict'
+import { useToast } from '@/hooks/use-toast'
 
 interface BookingFormProps {
   partner: Partner
@@ -23,6 +25,7 @@ interface BookingFormProps {
 }
 
 export function BookingForm({ partner, onSubmit, loading }: BookingFormProps) {
+  const { toast } = useToast()
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [selectedTime, setSelectedTime] = useState<string>('08:00')
   const [bookingType, setBookingType] = useState<BookingType>(
@@ -30,22 +33,21 @@ export function BookingForm({ partner, onSubmit, loading }: BookingFormProps) {
   )
   const [duration, setDuration] = useState<number>(1)
   const [notes, setNotes] = useState<string>('')
+  const [showConflictAlert, setShowConflictAlert] = useState(false)
 
-  // Generate time options from 8 AM to 8 PM
   const timeOptions = Array.from({ length: 13 }, (_, i) => {
     const hour = i + 8
     return `${hour.toString().padStart(2, '0')}:00`
   })
 
-  // Generate duration options based on booking type
   const getDurationOptions = () => {
     switch (bookingType) {
       case BookingType.HOURLY:
-        return Array.from({ length: 6 }, (_, i) => i + 1) // 1-6 hours
+        return Array.from({ length: 6 }, (_, i) => i + 1)
       case BookingType.DAILY:
-        return Array.from({ length: 7 }, (_, i) => i + 1) // 1-7 days
+        return Array.from({ length: 7 }, (_, i) => i + 1)
       case BookingType.MONTHLY:
-        return Array.from({ length: 12 }, (_, i) => i + 1) // 1-12 months
+        return Array.from({ length: 12 }, (_, i) => i + 1)
       default:
         return []
     }
@@ -118,7 +120,16 @@ export function BookingForm({ partner, onSubmit, loading }: BookingFormProps) {
       notes,
     }
 
-    await onSubmit(bookingData)
+    try {
+      await onSubmit(bookingData)
+      toast({
+        title: 'Booking Success',
+        description: 'Your booking has been successfully created',
+      })
+    } catch (error: any) {
+      console.error('Error in handleSubmit:', error)
+      setShowConflictAlert(true)
+    }
   }
 
   return (
@@ -231,6 +242,16 @@ export function BookingForm({ partner, onSubmit, loading }: BookingFormProps) {
           </div>
         </div>
       </CardContent>
+      <BookingConflictAlert
+        isOpen={showConflictAlert}
+        onClose={() => setShowConflictAlert(false)}
+        conflictDetails={{
+          startTime: selectedDate ? selectedDate.toISOString() : '',
+          endTime: selectedDate
+            ? calculateEndDateTime(selectedDate).toISOString()
+            : '',
+        }}
+      />
     </Card>
   )
 }

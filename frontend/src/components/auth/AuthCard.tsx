@@ -1,4 +1,3 @@
-// src/components/auth/AuthCard.tsx
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 import {

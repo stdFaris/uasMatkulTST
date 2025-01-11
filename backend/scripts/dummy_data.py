@@ -9,6 +9,22 @@ KECAMATAN_LIST = [
     "Pantai Indah Kapuk", "Kelapa Gading"
 ]
 
+# Added Indonesian names data
+FIRST_NAMES = [
+    "Muhammad", "Ahmad", "Abdul", "Budi", "Dedi", "Eko", "Firman", "Gading",
+    "Hadi", "Irfan", "Joko", "Kurniawan", "Lukman", "Nizar", "Putra",
+    "Ratna", "Siti", "Tri", "Utami", "Wati", "Yanti", "Zahra", "Dewi",
+    "Putri", "Rina", "Ani", "Maya", "Nova", "Dian", "Lia"
+]
+
+LAST_NAMES = [
+    "Wijaya", "Kusuma", "Pratama", "Saputra", "Hidayat", "Nugraha", "Ramadan",
+    "Santoso", "Wibowo", "Yulianto", "Setiawan", "Permana", "Octavian", "Maulana",
+    "Hidayatullah", "Firmansyah", "Gunawan", "Suryadi", "Rahman", "Abdullah",
+    "Pradana", "Putra", "Hermawan", "Kartika", "Sari", "Putri", "Lestari",
+    "Pertiwi", "Utami", "Handayani"
+]
+
 SPECIALIZATIONS = {
     "PEMBANTU": [
         "Cleaning", "Cooking", "Laundry", "Childcare", 
@@ -28,6 +44,12 @@ SPECIALIZATIONS = {
 }
 
 LANGUAGES = ["Indonesian", "English", "Javanese", "Sundanese", "Mandarin"]
+
+def generate_name() -> str:
+    """Generate a random Indonesian full name."""
+    first_name = random.choice(FIRST_NAMES)
+    last_name = random.choice(LAST_NAMES)
+    return f"{first_name} {last_name}"
 
 def generate_partner_data(num_partners: int = 100) -> List[Dict]:
     partners = []
@@ -79,7 +101,7 @@ def create_single_partner(kecamatan: str, role: str, is_baseline: bool = False) 
     spoken_languages = random.sample(LANGUAGES, random.randint(2, 3))
 
     return {
-        "full_name": f"Partner_{kecamatan}_{role}_{random.randint(1000, 9999)}",
+        "full_name": generate_name(),  # Using the new name generator
         "role": role,
         "experience_years": experience_years,
         "rating": rating,
@@ -92,7 +114,6 @@ def create_single_partner(kecamatan: str, role: str, is_baseline: bool = False) 
         "profile_description": f"Experienced {role.lower().replace('_', ' ')} with {experience_years} years of experience specializing in {', '.join(role_specializations[:2])}."
     }
 
-# Generate availability slots for a week
 def generate_partner_availability(partner_id: int) -> List[Dict]:
     availabilities = []
     start_date = datetime.now().replace(hour=8, minute=0, second=0, microsecond=0)

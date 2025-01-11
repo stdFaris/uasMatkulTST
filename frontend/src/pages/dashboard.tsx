@@ -1,4 +1,3 @@
-// src/pages/dashboard.tsx
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar, Clock, DollarSign, Users, RefreshCw } from 'lucide-react'
@@ -24,7 +23,7 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-primary-50 to-white">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg font-medium text-primary-700">Loading...</div>
       </div>
     )

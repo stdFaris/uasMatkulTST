@@ -1,4 +1,3 @@
-// src/components/dashboard/upcoming-bookings.tsx
 import { Booking } from '@/types/booking'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDateTime, formatPrice } from '@/lib/utils'
@@ -30,37 +29,39 @@ export function UpcomingBookings({
         </Button>
       </CardHeader>
       <CardContent className="pt-4">
-        <div className="space-y-4">
-          {bookings.length === 0 ? (
-            <p className="text-center text-primary-600 py-8">
-              No upcoming bookings
-            </p>
-          ) : (
-            bookings.map((booking) => (
-              <div
-                key={booking.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-primary-50/50 hover:bg-primary-50 transition-colors"
-              >
-                <div className="space-y-1">
-                  <p className="font-semibold text-primary-900">
-                    {booking.partner.full_name}
-                  </p>
-                  <p className="text-sm text-primary-600">
-                    {formatDateTime(booking.start_datetime)}
-                  </p>
-                  <p className="text-sm text-primary-600">{booking.type}</p>
+        <div className="max-h-96 overflow-y-auto pr-2">
+          <div className="space-y-4">
+            {bookings.length === 0 ? (
+              <p className="text-center text-primary-600 py-8">
+                No upcoming bookings
+              </p>
+            ) : (
+              bookings.slice(0, 5).map((booking) => (
+                <div
+                  key={booking.id}
+                  className="flex items-center justify-between p-4 rounded-lg bg-primary-50/50 hover:bg-primary-50 transition-colors"
+                >
+                  <div className="space-y-1">
+                    <p className="font-semibold text-primary-900">
+                      {booking.partner.full_name}
+                    </p>
+                    <p className="text-sm text-primary-600">
+                      {formatDateTime(booking.start_datetime)}
+                    </p>
+                    <p className="text-sm text-primary-600">{booking.type}</p>
+                  </div>
+                  <div className="text-right space-y-1">
+                    <p className="font-semibold text-primary-900">
+                      {formatPrice(booking.total_price)}
+                    </p>
+                    <p className="text-sm text-primary-600 capitalize">
+                      {booking.status.toLowerCase()}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right space-y-1">
-                  <p className="font-semibold text-primary-900">
-                    {formatPrice(booking.total_price)}
-                  </p>
-                  <p className="text-sm text-primary-600 capitalize">
-                    {booking.status.toLowerCase()}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

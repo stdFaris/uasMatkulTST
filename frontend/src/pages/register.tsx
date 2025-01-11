@@ -1,4 +1,3 @@
-// src/pages/register.tsx
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
