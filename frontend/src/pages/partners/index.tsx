@@ -127,24 +127,6 @@ export function PartnersPage() {
           </div>
         </div>
       </div>
-
-      <AlertDialog
-        open={showUnavailableAlert}
-        onOpenChange={setShowUnavailableAlert}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Partner Unavailable</AlertDialogTitle>
-            <AlertDialogDescription>
-              This partner is currently unavailable. Please select another
-              partner who is available for service.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Close</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

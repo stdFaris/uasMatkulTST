@@ -46,7 +46,19 @@ export const formatDateTime = (date: string | Date) => {
   })
 }
 
-// Price formatting
+export const formatDateTimeBooking = (date: string | Date) => {
+  const d = new Date(date)
+  return d.toLocaleString('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Jakarta',
+  })
+}
+
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',

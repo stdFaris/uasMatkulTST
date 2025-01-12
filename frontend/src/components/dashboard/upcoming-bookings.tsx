@@ -1,6 +1,6 @@
 import { Booking } from '@/types/booking'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatDateTime, formatPrice } from '@/lib/utils'
+import { formatDateTimeBooking, formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
 
@@ -45,9 +45,12 @@ export function UpcomingBookings({
                     <p className="font-semibold text-primary-900">
                       {booking.partner.full_name}
                     </p>
-                    <p className="text-sm text-primary-600">
-                      {formatDateTime(booking.start_datetime)}
-                    </p>
+                    <div className="text-sm text-primary-600 space-y-0.5">
+                      <p>
+                        Start: {formatDateTimeBooking(booking.start_datetime)}
+                      </p>
+                      <p>End: {formatDateTimeBooking(booking.end_datetime)}</p>
+                    </div>
                     <p className="text-sm text-primary-600">{booking.type}</p>
                   </div>
                   <div className="text-right space-y-1">
