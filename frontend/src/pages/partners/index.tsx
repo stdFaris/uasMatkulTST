@@ -10,22 +10,11 @@ import { PartnerFilters } from '@/components/partner/partner-filters'
 import { usePartners } from '@/hooks/usePartners'
 import { Search, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-} from '@/components/ui/alert-dialog'
-
 export function PartnersPage() {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null)
   const [filters, setFilters] = useState<PartnerFilter>({})
-  const [showUnavailableAlert, setShowUnavailableAlert] = useState(false)
 
   const { user } = useAuth()
   const { partners, loading, error } = usePartners(
@@ -51,8 +40,6 @@ export function PartnersPage() {
     if (selectedPartner) {
       if (selectedPartner.is_available) {
         navigate(`/partners/${selectedPartner.id}`)
-      } else {
-        setShowUnavailableAlert(true)
       }
     }
   }
