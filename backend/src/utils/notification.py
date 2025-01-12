@@ -16,26 +16,29 @@ def check_upcoming_bookings():
 
 def generate_notification_message(type: NotificationType, booking: Booking) -> str:
     """
-    Generate notification message based on type and booking details
+    Generate notification message based on type and booking details with WIB timezone (+7)
     """
+    # Convert UTC string to datetime and add 7 hours
+    start_time = start_time = booking.start_datetime + timedelta(hours=7)
+    
     messages = {
         NotificationType.BOOKING_REMINDER: (
             f"Reminder: You have an upcoming appointment with {booking.partner.full_name} "
-            f"at {booking.start_datetime.strftime('%H:%M')} on "
-            f"{booking.start_datetime.strftime('%Y-%m-%d')}"
+            f"at {start_time.strftime('%H:%M')} WIB on "
+            f"{start_time.strftime('%Y-%m-%d')}"
         ),
         NotificationType.SCHEDULE_CHANGE: (
             f"Your appointment with {booking.partner.full_name} has been rescheduled to "
-            f"{booking.start_datetime.strftime('%Y-%m-%d %H:%M')}"
+            f"{start_time.strftime('%Y-%m-%d %H:%M')} WIB"
         ),
         NotificationType.BOOKING_CONFIRMATION: (
             f"Your appointment with {booking.partner.full_name} has been confirmed for "
-            f"{booking.start_datetime.strftime('%Y-%m-%d')} at "
-            f"{booking.start_datetime.strftime('%H:%M')}"
+            f"{start_time.strftime('%Y-%m-%d')} at "
+            f"{start_time.strftime('%H:%M')} WIB"
         ),
         NotificationType.PARTNER_UNAVAILABLE: (
             f"Unfortunately, {booking.partner.full_name} is no longer available for your "
-            f"appointment on {booking.start_datetime.strftime('%Y-%m-%d %H:%M')}"
+            f"appointment on {start_time.strftime('%Y-%m-%d %H:%M')} WIB"
         )
     }
     return messages.get(type, "Notification about your booking")

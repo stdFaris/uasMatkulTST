@@ -1,4 +1,3 @@
-# src/scripts/seed_database.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
